@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Computer Academy | Typing Tutor</title>
+<style>
+:root{--bg:#081321;--surface:#102238;--card:#17314d;--line:#2a4966;--cyan:#00d9ff;--mint:#68f0b4;--text:#f3f8ff;--muted:#a9bfd3;--red:#ff7e8a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#12304a 0,#081321 55%);color:var(--text);font:16px/1.5 Arial,sans-serif}
+header{padding:22px max(16px,calc((100% - 1120px)/2));background:#07111edb;border-bottom:1px solid #24445e;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--cyan),#347bff);display:grid;place-items:center;color:#001321;font-weight:900;font-size:22px}.brand h1{font-size:18px;line-height:1.2;margin:0}.brand small{color:var(--muted)}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav button,.btn{border:1px solid var(--line);background:#142a40;color:var(--text);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}nav button.active,nav button:hover,.btn.primary{background:var(--cyan);color:#00131e;border-color:var(--cyan)}
+main{max-width:1120px;margin:26px auto;padding:0 16px}.view{display:none}.view.active{display:block}.hero{padding:30px;border-radius:22px;background:linear-gradient(120deg,#123755,#10243b);border:1px solid #2b5874;margin-bottom:20px}.hero h2{font-size:clamp(26px,4vw,40px);line-height:1.12;margin:0 0 12px}.hero p{color:var(--muted);max-width:680px}.tag{display:inline-block;color:var(--mint);font-weight:800;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat,.tile,.lesson-card,.box{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:18px}.stat small{display:block;color:var(--muted)}.stat strong{display:block;color:var(--cyan);font-size:27px;margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.tile h3,.lesson-card h3{margin:0 0 8px}.tile p,.lesson-card p{color:var(--muted)}.tile button{margin-top:8px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}.toolbar select,.toolbar input{padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:#f5f8fc;color:#102033;font:inherit}
+.lesson-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.typing-text{padding:24px;background:#06101b;border:1px solid #294a66;border-radius:14px;font-size:clamp(18px,2.5vw,24px);line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;margin:16px 0}.typing-text span.correct{color:var(--mint)}.typing-text span.wrong{background:#542d3b;color:#ffb4bd;border-radius:3px}.typing-text span.cursor{border-bottom:3px solid var(--cyan);background:#153650}
+textarea{width:100%;min-height:120px;padding:15px;border-radius:12px;border:2px solid #31516b;background:#f5f8fc;color:#102033;font:18px/1.6 Arial;resize:vertical}textarea:focus{outline:2px solid var(--cyan)}textarea:disabled{opacity:.7}
+.progress{height:8px;background:#06101b;border-radius:20px;overflow:hidden;margin:12px 0}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--mint))}
+.feedback{min-height:26px;color:var(--mint);font-weight:700}.muted{color:var(--muted)}.keyboard{display:grid;gap:5px;margin-top:20px;max-width:740px}.keyrow{display:flex;justify-content:center;gap:5px}.key{flex:1;max-width:58px;text-align:center;padding:9px 2px;border-radius:6px;background:#203b56;border:1px solid #365570;color:#cde0ef;font-size:12px}.key.target{background:var(--cyan);color:#00131e;font-weight:900}.key.wrongkey{background:#733c49}
+.result{padding:18px;border:1px solid var(--line);background:#0c1d2f;border-radius:14px;margin-top:15px}.result h3{color:var(--mint)}.hidden{display:none!important}footer{text-align:center;padding:30px;color:var(--muted)}
+@media(max-width:650px){header{padding:16px}.stats{grid-template-columns:repeat(2,1fr)}.hero{padding:22px}.key{font-size:10px;padding:8px 1px}.typing-text{padding:16px}}
+
+.currency-box h2{margin:2px 0 6px}.currency-input{display:flex;flex-direction:column;gap:6px;min-width:150px}.currency-input label{font-size:13px;color:var(--muted);font-weight:700}.currency-input input{width:160px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f5f8fc;color:#102033;font:inherit}.currency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.currency-result{padding:16px;border:1px solid var(--line);background:#0b1b2c;border-radius:13px}.currency-result small{display:block;color:var(--muted)}.currency-result strong{display:block;font-size:clamp(20px,3vw,28px);color:var(--mint);margin-top:6px;overflow-wrap:anywhere}
+@media(max-width:650px){.currency-grid{grid-template-columns:1fr}.currency-input input{width:100%}}
+@media print{body{background:#fff!important;color:#111!important}body *{visibility:hidden!important}#printReceipt,#printReceipt *{visibility:visible!important}#printReceipt{display:block!important;position:absolute;left:0;top:0;width:100%;background:#fff!important;color:#111!important;border:0!important;box-shadow:none!important}#printReceipt h2{color:#111!important}header,footer{display:none!important}}
+
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">S</div><div><h1>SMART COMPUTER ACADEMY</h1><small>Typing Tutor & Practice Lab</small></div></div>
+ <nav>
+  <button class="active" data-view="home">Home</button><button data-view="learn">Lessons</button><button data-view="test">Typing Test</button><button data-view="smart">Smart Practice</button><button data-view="progress">My Progress</button><button data-view="upgrade">Upgrade</button>
+ </nav>
+</header>
+<main>
+<section id="home" class="view active">
+ <div class="hero"><span class="tag">Learn • Practice • Improve</span><h2>Build typing confidence,<br>one lesson at a time.</h2><p>Learn touch typing with guided lessons, timed tests, personalized practice, and progress tracking—all in one place.</p><button class="btn primary" onclick="go('learn')">Start Learning →</button></div>
+ <div class="stats"><div class="stat"><small>Lessons completed</small><strong id="homeDone">0</strong></div><div class="stat"><small>Best speed</small><strong id="homeBest">0 WPM</strong></div><div class="stat"><small>Average accuracy</small><strong id="homeAcc">—</strong></div><div class="stat"><small>Practice sessions</small><strong id="homeSessions">0</strong></div></div>
+
+ <div class="grid">
+  <div class="tile"><h3>Guided lessons</h3><p>Start with home-row keys and progress to words, sentences, and paragraphs.</p><button class="btn" onclick="go('learn')">Browse lessons</button></div>
+  <div class="tile"><h3>Typing speed test</h3><p>Choose a duration and measure your words per minute and accuracy.</p><button class="btn" onclick="go('test')">Take a test</button></div>
+  <div class="tile"><h3>Smart practice</h3><p>Practice common keys and letters you miss during typing sessions.</p><button class="btn" onclick="go('smart')">Practice weak keys</button></div>
+ </div>
+ <div class="box" style="margin-top:20px"><div class="lesson-head"><div><span class="tag">Choose your next challenge</span><h2>Typing Lessons</h2><p class="muted">12 lessons appear here first. Open any lesson, or show all 100 lessons.</p></div><button class="btn primary" id="showAllLessons">Show all 100 lessons</button></div><div id="homeLessonGrid" class="grid" style="margin-top:16px"></div></div>
+</section>
+<section id="upgrade" class="view">
+ <div class="hero"><span class="tag">Premium access</span><h2>Upgrade your typing journey</h2><p>New learners can start with one month of trial access. Choose a paid plan when ready; paid upgrades are activated after payment is verified by the academy.</p></div>
+ <div class="toolbar"><label for="upgradeCurrency">Display prices in</label><select id="upgradeCurrency"><option value="USD">US Dollar (USD)</option><option value="PKR">Pakistani Rupee (PKR)</option><option value="GBP">British Pound (GBP)</option><option value="EUR">Euro (EUR)</option></select><span class="muted" id="upgradeRateNote">Exchange rates update when online.</span></div>
+ <div class="grid" id="planGrid">
+  <div class="lesson-card"><span class="tag">1 year</span><h3>Annual Upgrade</h3><p>Premium typing practice for one year.</p><strong class="plan-price" data-usd="10">$10</strong><p><button class="btn primary" onclick="selectPlan('annual')">Choose annual plan</button></p></div>
+  <div class="lesson-card"><span class="tag">5 years</span><h3>Five-Year Upgrade</h3><p>Long-term premium access for five years.</p><strong class="plan-price" data-usd="20">$20</strong><p><button class="btn primary" onclick="selectPlan('five')">Choose 5-year plan</button></p></div>
+ </div>
+ <div class="box" id="paymentBox" style="margin-top:20px;display:none"><span class="tag">Payment details</span><h2 id="selectedPlanTitle">Selected plan</h2><p id="selectedPlanPrice"></p><div class="grid"><div class="tile"><h3>Easypaisa / JazzCash</h3><p>Send payment to the academy's mobile wallet:</p><strong>0332 6389690</strong></div><div class="tile"><h3>Bank transfer</h3><p class="muted">Bank account details must be added by the academy owner before publishing.</p></div></div><p class="muted">After paying, enter your details and transaction/reference ID. The site prepares a WhatsApp request for manual verification. Never enter your Gmail password, bank password, card PIN, or OTP here.</p>
+<div class="grid" style="margin:16px 0">
+ <div class="currency-input"><label for="customerName">Full name</label><input id="customerName" type="text" autocomplete="name" placeholder="Your full name" required></div>
+ <div class="currency-input"><label for="customerEmail">Your Gmail / email address</label><input id="customerEmail" type="email" autocomplete="email" placeholder="yourname@gmail.com" required></div>
+ <div class="currency-input"><label for="customerAddress">Address</label><input id="customerAddress" type="text" autocomplete="street-address" placeholder="Your address" required></div>
+ <div class="currency-input"><label for="customerPostal">Postal code</label><input id="customerPostal" type="text" autocomplete="postal-code" placeholder="Postal code" required></div>
+</div>
+<div class="grid" style="margin:16px 0">
+ <div class="currency-input"><label for="transactionId">Transaction / reference ID</label><input id="transactionId" placeholder="Enter transaction ID" required></div>
+</div>
+<div class="toolbar">
+ <button class="btn" id="printPayment">Print</button>
+ <button class="btn primary" id="sendPaymentProof">Send with WhatsApp</button>
+ <button class="btn" id="sendPaymentEmail">Send with Gmail</button>
+</div>
+<p class="muted"><b>How to finish:</b> Fill in your details, then press <b>Print</b>. After that, press <b>Send with WhatsApp</b> or <b>Send with Gmail</b> to send your payment details. Send your payment proof separately in the app.</p>
+<div id="printReceipt" class="result" style="display:none"></div>
+<div class="feedback" id="paymentFeedback" aria-live="polite"></div></div>
+</section>
+<section id="learn" class="view">
+ <div class="box"><div class="lesson-head"><div><span class="tag">Typing course</span><h2>Guided Lessons</h2><p class="muted">Choose a lesson. Type each line; the next line appears automatically. Finish the lesson to continue.</p></div><div class="toolbar"><select id="lessonSelect" aria-label="Select lesson"></select><button class="btn" id="lessonRestart">Restart</button><button class="btn primary" id="lessonNext">Next lesson →</button></div></div>
+ <div class="progress"><div id="lessonProgress"></div></div><div class="typing-text" id="lessonText"></div><textarea id="lessonInput" placeholder="Type the line here..." spellcheck="false" autocomplete="off"></textarea>
+ <div class="stats"><div class="stat"><small>Speed</small><strong id="lessonWpm">0</strong></div><div class="stat"><small>Accuracy</small><strong id="lessonAccuracy">100%</strong></div><div class="stat"><small>Errors</small><strong id="lessonErrors">0</strong></div><div class="stat"><small>Progress</small><strong id="lessonPercent">0%</strong></div></div><div class="feedback" id="lessonFeedback">Begin typing. The next line will appear automatically.</div>
+ <div class="keyboard" id="keyboard"></div></div>
+</section>
+<section id="test" class="view">
+ <div class="box"><span class="tag">Timed challenge</span><h2>Typing Speed Test</h2><p class="muted">Choose a test length. The timer starts with your first keystroke.</p><div class="toolbar"><label for="duration">Duration</label><select id="duration"><option value="30">30 seconds</option><option value="60" selected>1 minute</option><option value="120">2 minutes</option><option value="300">5 minutes</option></select><button class="btn primary" id="testStart">Start / Restart Test</button></div><div class="stat"><small>Time remaining</small><strong id="timeLeft">60s</strong></div><div class="typing-text" id="testText"></div><textarea id="testInput" placeholder="Type here when the test starts..." spellcheck="false" autocomplete="off" disabled></textarea><div class="stats"><div class="stat"><small>WPM</small><strong id="testWpm">0</strong></div><div class="stat"><small>Accuracy</small><strong id="testAccuracy">100%</strong></div><div class="stat"><small>Errors</small><strong id="testErrors">0</strong></div><div class="stat"><small>Characters</small><strong id="testChars">0</strong></div></div><div class="feedback" id="testFeedback">Press Start Test when you're ready.</div><div class="result hidden" id="testResult"></div></div>
+</section>
+<section id="smart" class="view">
+ <div class="box"><span class="tag">Personalized practice</span><h2>Smart Practice</h2><p class="muted">This practice focuses on letters you have missed most often in recent sessions. If no history is available, it starts with a balanced home-row exercise.</p><div class="stats"><div class="stat"><small>Focus key</small><strong id="focusKey">A</strong></div><div class="stat"><small>Recorded errors</small><strong id="focusErrors">0</strong></div><div class="stat"><small>Practice rounds</small><strong id="smartRounds">0</strong></div><div class="stat"><small>Accuracy</small><strong id="smartAccuracy">100%</strong></div></div><div class="typing-text" id="smartText"></div><textarea id="smartInput" placeholder="Type the practice text..." spellcheck="false" autocomplete="off"></textarea><div class="toolbar"><button class="btn primary" id="smartNew">New practice</button><button class="btn" id="smartReset">Reset</button></div><div class="feedback" id="smartFeedback">Type the text to practice your focus keys.</div></div>
+</section>
+<section id="progress" class="view">
+ <div class="box"><span class="tag">Your learning journey</span><h2>My Progress</h2><div class="stats"><div class="stat"><small>Completed lessons</small><strong id="pDone">0</strong></div><div class="stat"><small>Best WPM</small><strong id="pBest">0</strong></div><div class="stat"><small>Average accuracy</small><strong id="pAccuracy">—</strong></div><div class="stat"><small>Total sessions</small><strong id="pSessions">0</strong></div></div><h3>Lesson completion</h3><div id="lessonList" class="grid"></div><div class="toolbar"><button class="btn" id="clearProgress">Reset saved progress</button></div><p class="muted">Progress is saved locally in this browser on this device.</p></div>
+</section>
+</main>
+<footer>© 2026 SMART COMPUTER ACADEMY • Typing Tutor</footer>
+<script>
+const lessonData=[
+["Home row: A S D F J K L ;","asdf jkl; asdf jkl; fjdk sla;"],
+["Home row words","dad sad fad ask flask lad fall"],
+["Top row: Q W E R U I O P","qwer uiop qwer uiop quiet power"],
+["Top row words","write your quiet power to type"],
+["Bottom row: Z X C V M N","zxcv mnb zxcv mnb mix can move"],
+["Bottom row words","mix van can man cave zoom"],
+["All letters","The quick brown fox jumps over the lazy dog."],
+["Common sentences","Practice makes progress when you type with care."],
+["Numbers","12345 67890 2026 13579 24680"],
+["Punctuation","Hello, learner! Are you ready to type?"],
+["Short paragraph","Good typing begins with patience. Keep your fingers relaxed and focus on accuracy before speed."],
+["Long paragraph","A computer keyboard is a useful tool for learning, communication, and work. With regular practice, correct finger placement becomes natural. Take your time, watch the text, and build your speed one lesson at a time."]
+];
+const extraLessonGroups=[
+["Home row practice",["asdf jkl;","sad dad asks;","fall; ask; flask;","a lad had a salad.","All lads ask; all dads fall."]],
+["Top row practice",["qwer tyui op","power write quiet","type your query here.","We were quite quiet.","You type; we write."]],
+["Bottom row practice",["zxcv bnm","mix box; zoom; cave;","Many men can move.","Move the box next to me.","Come and examine my new van."]],
+["Word building",["computer keyboard screen","learn practice improve","bright quick clever typing","school student teacher","friendly games make learning fun"]],
+["Sentence practice",["I can type with care.","My fingers rest on the home row.","Small steps lead to great progress.","I will practice a little every day.","Accuracy comes before speed."]],
+["Numbers and symbols",["123 456 789 0","2026 10 25 100","+ - = / ? ! @ #","$5.99, 25% off;","(1) [2] {3} : ; , ."]],
+["Fun typing",["The happy cat can type.","A tiny robot writes a poem.","Pizza, popcorn, and a typing game!","Race the clock, not your accuracy.","Type like a friendly space explorer."]],
+["Paragraph practice",["Typing is a useful skill for school and work. Practice calmly and celebrate each improvement.","A good typist looks at the screen, keeps a relaxed posture, and uses the correct fingers.","Every lesson gives you a chance to learn something new. Keep going and enjoy the journey.","Computers help us create stories, solve problems, and share ideas with people around the world.","Take a short break when you need one. Then return with fresh focus and steady hands."]]
+];
+for(let g=0;g<extraLessonGroups.length;g++){let [name,texts]=extraLessonGroups[g];for(let j=0;j<texts.length;j++){lessonData.push([`${name} ${j+1}`,texts[j]])}}
+while(lessonData.length<100){let n=lessonData.length+1;let group=extraLessonGroups[(n-13)%extraLessonGroups.length];let txt=group[1][(n-13)%group[1].length];lessonData.push([`${group[0]} ${n}`,txt+" Keep practicing!"])}
+lessonData.length=100;
+const passages=[
+"The quick brown fox jumps over the lazy dog. Practice typing every day to improve your speed and accuracy.",
+"Smart Computer Academy helps learners build useful computer skills. Stay focused, type carefully, and keep improving.",
+"Typing is a skill that grows with practice. Keep your hands relaxed, look at the screen, and use the correct fingers.",
+"Technology makes communication easier. Accurate typing helps you write messages, assignments, and reports with confidence."
+];
+let state=loadState(), lessonStart=null, lessonDone=false, lessonSteps=[], lessonStepIndex=0, lessonCharsDone=0, lessonAdvanceTimer=null, testTimer=null,testEnd=0,testActive=false,smartStart=null,smartTarget="",smartRounds=0;
+function loadState(){try{return JSON.parse(localStorage.getItem("scaTypingState"))||{completed:[],sessions:[],errors:{}}}catch(e){return{completed:[],sessions:[],errors:{}}}}
+function saveState(){localStorage.setItem("scaTypingState",JSON.stringify(state));renderSummary()}
+function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="progress")renderProgress();if(id==="smart")newSmart()}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
+window.go=go;
+const lessonSelect=document.getElementById("lessonSelect");
+lessonData.forEach((x,i)=>{let o=document.createElement("option");o.value=i;o.textContent=`Lesson ${i+1}: ${x[0]}`;lessonSelect.appendChild(o)});
+let showAllHomeLessons=false;
+function renderHomeLessons(){let root=document.getElementById("homeLessonGrid");if(!root)return;root.innerHTML="";let count=showAllHomeLessons?lessonData.length:12;lessonData.slice(0,count).forEach((l,i)=>{let card=document.createElement("div");card.className="lesson-card";card.innerHTML=`<span class="tag">Lesson ${i+1}</span><h3>${l[0]}</h3><p>${l[1].slice(0,90)}${l[1].length>90?'…':''}</p><button class="btn primary">Start lesson →</button>`;card.querySelector("button").onclick=()=>{lessonSelect.value=i;loadLesson();go("learn")};root.appendChild(card)});let b=document.getElementById("showAllLessons");b.textContent=showAllHomeLessons?"Show first 12 lessons":"Show all 100 lessons"}
+document.getElementById("showAllLessons").onclick=()=>{showAllHomeLessons=!showAllHomeLessons;renderHomeLessons()};
+
+function targetLesson(){return lessonSteps[lessonStepIndex]||""}
+function makeLessonSteps(text){let parts=text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[text];return parts.map(x=>x.trim()).filter(Boolean)}
+function renderTyping(el,target,typed){el.innerHTML="";for(let i=0;i<target.length;i++){let s=document.createElement("span");s.textContent=target[i];if(i<typed.length)s.className=typed[i]===target[i]?"correct":"wrong";else if(i===typed.length)s.className="cursor";el.appendChild(s)}}
+function metrics(target,typed,start){let errors=0;for(let i=0;i<typed.length;i++)if(typed[i]!==target[i])errors++;let mins=start?Math.max((Date.now()-start)/60000,1/60000):0;return{errors,wpm:start?Math.round(Math.max(0,typed.length-errors)/5/mins):0,accuracy:typed.length?Math.max(0,Math.round((typed.length-errors)/typed.length*100)):100,progress:Math.min(100,Math.round(typed.length/target.length*100))}}
+function record(target,typed,start,kind){let m=metrics(target,typed,start);state.sessions.push({wpm:m.wpm,accuracy:m.accuracy,errors:m.errors,kind,date:Date.now()});for(let i=0;i<typed.length;i++)if(typed[i]!==target[i]){let key=typed[i].toLowerCase();if(/[a-z]/.test(key))state.errors[key]=(state.errors[key]||0)+1}saveState();return m}
+function loadLesson(){clearTimeout(lessonAdvanceTimer);lessonStart=null;lessonDone=false;lessonSteps=makeLessonSteps(lessonData[+lessonSelect.value][1]);lessonStepIndex=0;lessonCharsDone=0;document.getElementById("lessonInput").value="";document.getElementById("lessonInput").disabled=false;renderLessonStack("");updateLesson();document.getElementById("lessonFeedback").textContent=`Line 1 of ${lessonSteps.length} • Start typing!`}
+function renderLessonStack(typed=""){
+ const box=document.getElementById("lessonText");
+ box.innerHTML="";
+ // Keep every completed line visible, then show the current line.
+ for(let line=0;line<lessonStepIndex;line++){
+  const row=document.createElement("div");
+  row.style.cssText="display:block;padding:3px 0;color:var(--mint);white-space:pre-wrap";
+  row.textContent="✓ "+lessonSteps[line];
+  box.appendChild(row);
+ }
+ const current=document.createElement("div");
+ current.style.cssText="display:block;padding:3px 0;white-space:pre-wrap";
+ for(let i=0;i<targetLesson().length;i++){
+  const s=document.createElement("span");
+  s.textContent=targetLesson()[i];
+  if(i<typed.length)s.className=typed[i]===targetLesson()[i]?"correct":"wrong";
+  else if(i===typed.length)s.className="cursor";
+  current.appendChild(s);
+ }
+ box.appendChild(current);
+}
+function updateLesson(){if(lessonDone)return;let t=targetLesson(),v=document.getElementById("lessonInput").value,m=metrics(t,v,lessonStart);renderLessonStack(v);document.getElementById("lessonWpm").textContent=m.wpm;document.getElementById("lessonAccuracy").textContent=m.accuracy+"%";document.getElementById("lessonErrors").textContent=m.errors;let total=lessonSteps.reduce((a,x)=>a+x.length,0),progress=Math.round((lessonCharsDone+Math.min(v.length,t.length))/Math.max(1,total)*100);document.getElementById("lessonPercent").textContent=progress+"%";document.getElementById("lessonProgress").style.width=progress+"%";highlightKey(v.length<t.length?t[v.length]:"");if(v===t&&!lessonDone){lessonCharsDone+=t.length;if(lessonStepIndex<lessonSteps.length-1){document.getElementById("lessonInput").disabled=true;document.getElementById("lessonFeedback").textContent="Great! Next line loading…";lessonAdvanceTimer=setTimeout(()=>{lessonStepIndex++;document.getElementById("lessonInput").value="";document.getElementById("lessonInput").disabled=false;renderLessonStack("");document.getElementById("lessonFeedback").textContent=`Line ${lessonStepIndex+1} of ${lessonSteps.length} • Keep going!`;document.getElementById("lessonInput").focus();updateLesson()},450)}else{lessonDone=true;document.getElementById("lessonInput").disabled=true;let final=record(lessonSteps.join(" "),lessonSteps.join(" "),lessonStart,"lesson");if(!state.completed.includes(+lessonSelect.value))state.completed.push(+lessonSelect.value);saveState();document.getElementById("lessonPercent").textContent="100%";document.getElementById("lessonProgress").style.width="100%";document.getElementById("lessonFeedback").textContent=`Lesson completed! ${final.wpm} WPM • ${final.accuracy}% accuracy. Next lesson is ready—click Next lesson.`}}}
+document.getElementById("lessonInput").addEventListener("input",e=>{if(!lessonStart&&e.target.value)lessonStart=Date.now();updateLesson()});
+lessonSelect.addEventListener("change",loadLesson);document.getElementById("lessonRestart").onclick=loadLesson;document.getElementById("lessonNext").onclick=()=>{lessonSelect.value=(+lessonSelect.value+1)%lessonData.length;loadLesson()};
+function keyboard(){let rows=["qwertyuiop","asdfghjkl","zxcvbnm"];let root=document.getElementById("keyboard");root.innerHTML=rows.map(r=>`<div class="keyrow">${r.split("").map(k=>`<div class="key" data-key="${k}">${k.toUpperCase()}</div>`).join("")}</div>`).join("")}
+function highlightKey(k){document.querySelectorAll(".key").forEach(el=>el.classList.toggle("target",el.dataset.key===String(k).toLowerCase()))}
+keyboard();
+function testPassage(){return passages[Math.floor(Math.random()*passages.length)]}
+function setupTestText(){let p=testPassage();document.getElementById("testText").dataset.target=p;renderTyping(document.getElementById("testText"),p,"")}
+function startTest(){clearInterval(testTimer);testActive=true;let dur=+document.getElementById("duration").value;testEnd=Date.now()+dur*1000;document.getElementById("testInput").disabled=false;document.getElementById("testInput").value="";document.getElementById("testInput").focus();document.getElementById("testResult").classList.add("hidden");setupTestText();document.getElementById("testFeedback").textContent="Test running—keep typing!";testTick();testTimer=setInterval(testTick,200)}
+function testTick(){let left=Math.max(0,Math.ceil((testEnd-Date.now())/1000));document.getElementById("timeLeft").textContent=left+"s";let v=document.getElementById("testInput").value,t=document.getElementById("testText").dataset.target,m=metrics(t,v,testEnd-(+document.getElementById("duration").value*1000));document.getElementById("testWpm").textContent=m.wpm;document.getElementById("testAccuracy").textContent=m.accuracy+"%";document.getElementById("testErrors").textContent=m.errors;document.getElementById("testChars").textContent=v.length;renderTyping(document.getElementById("testText"),t,v);if(left===0)finishTest()}
+function finishTest(){if(!testActive)return;testActive=false;clearInterval(testTimer);document.getElementById("testInput").disabled=true;let t=document.getElementById("testText").dataset.target,v=document.getElementById("testInput").value,start=testEnd-(+document.getElementById("duration").value*1000),m=record(t,v,start,"test");document.getElementById("testFeedback").textContent="Test complete!";let r=document.getElementById("testResult");r.classList.remove("hidden");r.innerHTML=`<h3>Your result</h3><p><b>${m.wpm} WPM</b> • ${m.accuracy}% accuracy • ${m.errors} errors</p><p>Try again to beat your best score.</p>`}
+document.getElementById("testStart").onclick=startTest;document.getElementById("testInput").addEventListener("input",()=>{if(testActive)testTick()});
+function newSmart(){let entries=Object.entries(state.errors).sort((a,b)=>b[1]-a[1]);let focus=entries[0]?.[0]||"a";document.getElementById("focusKey").textContent=focus.toUpperCase();document.getElementById("focusErrors").textContent=entries[0]?.[1]||0;smartTarget=entries.length?Array.from({length:4},()=>`Practice the letter ${focus}: ${focus} ${focus} ${focus} ${focus} ${focus}.`).join(" "):"asdf jkl; sad flask ask dad. Keep your fingers on the home row and type carefully.";document.getElementById("smartText").dataset.target=smartTarget;document.getElementById("smartInput").value="";document.getElementById("smartInput").disabled=false;smartStart=null;renderTyping(document.getElementById("smartText"),smartTarget,"");document.getElementById("smartRounds").textContent=smartRounds;document.getElementById("smartAccuracy").textContent="100%";document.getElementById("smartFeedback").textContent="Type the text to practice your focus keys."}
+document.getElementById("smartInput").addEventListener("input",e=>{let v=e.target.value,t=smartTarget;if(!smartStart&&v)smartStart=Date.now();renderTyping(document.getElementById("smartText"),t,v);let m=metrics(t,v,smartStart);document.getElementById("smartAccuracy").textContent=m.accuracy+"%";if(v===t){record(t,v,smartStart,"smart");smartRounds++;document.getElementById("smartRounds").textContent=smartRounds;document.getElementById("smartFeedback").textContent=`Round complete: ${m.accuracy}% accuracy. Start a new round to continue.`;e.target.disabled=true}});
+document.getElementById("smartNew").onclick=newSmart;document.getElementById("smartReset").onclick=newSmart;
+function renderSummary(){let s=state.sessions,done=state.completed.length,best=s.length?Math.max(...s.map(x=>x.wpm)):0,avg=s.length?Math.round(s.reduce((a,x)=>a+x.accuracy,0)/s.length):null;["homeDone","pDone"].forEach(id=>document.getElementById(id).textContent=done);["homeBest","pBest"].forEach(id=>document.getElementById(id).textContent=best+(id==="homeBest"?" WPM":""));["homeAcc","pAccuracy"].forEach(id=>document.getElementById(id).textContent=avg===null?"—":avg+"%");["homeSessions","pSessions"].forEach(id=>document.getElementById(id).textContent=s.length)}
+function renderProgress(){renderSummary();let root=document.getElementById("lessonList");root.innerHTML="";lessonData.forEach((l,i)=>{let done=state.completed.includes(i),d=document.createElement("div");d.className="lesson-card";d.innerHTML=`<h3>Lesson ${i+1}</h3><p>${l[0]}</p><p style="color:${done?'var(--mint)':'var(--muted)'}">${done?'✓ Completed':'Not completed yet'}</p><button class="btn" data-lesson="${i}">Practice</button>`;root.appendChild(d)});root.querySelectorAll("button").forEach(b=>b.onclick=()=>{lessonSelect.value=b.dataset.lesson;loadLesson();go("learn")})}
+document.getElementById("clearProgress").onclick=()=>{if(confirm("Reset all locally saved typing progress?")){state={completed:[],sessions:[],errors:{}};saveState();renderProgress();newSmart()}};
+renderSummary();renderHomeLessons();loadLesson();setupTestText();newSmart();
+
+// Currency conversion: live rates when internet access is available, with a clearly labeled fallback.
+let chosenPlan=null;
+function formatPlanPrice(usd){let cur=document.getElementById('upgradeCurrency').value,rate=cur==='USD'?1:(currencyRates[cur]||1);return new Intl.NumberFormat('en-US',{style:'currency',currency:cur,maximumFractionDigits:cur==='PKR'?0:2}).format(usd*rate)}
+function refreshPlanPrices(){document.querySelectorAll('.plan-price').forEach(el=>el.textContent=formatPlanPrice(Number(el.dataset.usd)));if(chosenPlan){document.getElementById('selectedPlanPrice').textContent='Price: '+formatPlanPrice(chosenPlan.usd);}}
+document.getElementById('upgradeCurrency').addEventListener('change',refreshPlanPrices);
+function selectPlan(key){chosenPlan=key==='annual'?{name:'Annual Upgrade (1 year)',usd:10}:{name:'Five-Year Upgrade (5 years)',usd:20};document.getElementById('paymentBox').style.display='block';document.getElementById('selectedPlanTitle').textContent=chosenPlan.name;document.getElementById('selectedPlanPrice').textContent='Price: '+formatPlanPrice(chosenPlan.usd);document.getElementById('paymentFeedback').textContent='';document.getElementById('paymentBox').scrollIntoView({behavior:'smooth',block:'start'});}
+window.selectPlan=selectPlan;
+function getPaymentDetails(){
+ if(!chosenPlan){document.getElementById('paymentFeedback').textContent='Please choose an upgrade plan first.';return null;}
+ const name=document.getElementById('customerName').value.trim(),email=document.getElementById('customerEmail').value.trim(),address=document.getElementById('customerAddress').value.trim(),postal=document.getElementById('customerPostal').value.trim(),ref=document.getElementById('transactionId').value.trim();
+ if(!name||!email||!address||!postal||!ref){document.getElementById('paymentFeedback').textContent='Please complete your name, email, address, postal code, and transaction/reference ID.';return null;}
+ if(!document.getElementById('customerEmail').checkValidity()){document.getElementById('paymentFeedback').textContent='Please enter a valid email address.';return null;}
+ return {name,email,address,postal,ref,plan:chosenPlan.name,price:formatPlanPrice(chosenPlan.usd)};
+}
+function paymentMessage(d){return `Hello Smart Computer Academy, I request ${d.plan}. Amount: ${d.price}. Name: ${d.name}. Email: ${d.email}. Address: ${d.address}. Postal code: ${d.postal}. Transaction/reference ID: ${d.ref}. Please verify payment and activate my upgrade. I will send payment proof separately. No passwords, PINs, or OTPs are included.`;}
+function showPrintableSummary(d){const box=document.getElementById('printReceipt');box.style.display='block';box.innerHTML=`<h2>Payment Request Summary</h2><p><b>Status:</b> Pending verification — not a payment receipt</p><p><b>Plan:</b> ${escapeHtml(d.plan)}</p><p><b>Amount:</b> ${escapeHtml(d.price)}</p><p><b>Name:</b> ${escapeHtml(d.name)}</p><p><b>Email:</b> ${escapeHtml(d.email)}</p><p><b>Address:</b> ${escapeHtml(d.address)}</p><p><b>Postal code:</b> ${escapeHtml(d.postal)}</p><p><b>Transaction ID:</b> ${escapeHtml(d.ref)}</p><p><b>Next:</b> Print this summary, then send your payment proof and details using WhatsApp or Gmail. Upgrade activates only after the academy verifies the payment.</p>`;return box;}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('printPayment').onclick=()=>{let d=getPaymentDetails();if(!d)return;showPrintableSummary(d);window.print();};
+document.getElementById('sendPaymentProof').onclick=()=>{let d=getPaymentDetails();if(!d)return;showPrintableSummary(d);window.open('https://wa.me/923326389690?text='+encodeURIComponent(paymentMessage(d)),'_blank');document.getElementById('paymentFeedback').textContent='WhatsApp opened with your request. Send your payment proof separately in WhatsApp. Upgrade remains pending until verified.';};
+document.getElementById('sendPaymentEmail').onclick=()=>{let d=getPaymentDetails();if(!d)return;showPrintableSummary(d);let subject=`Upgrade payment proof - ${d.plan}`;window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(paymentMessage(d)+'\n\nPlease enter the academy email address, attach your payment proof file, and send.')}`,'_blank');document.getElementById('paymentFeedback').textContent='Gmail opened with your message. Enter the academy email address, send your payment proof separately. Upgrade remains pending until verified.';};
+let currencyRates={PKR:278.5,GBP:0.77,EUR:0.92};
+async function updateCurrencyRates(){try{let response=await fetch('https://open.er-api.com/v6/latest/USD',{cache:'no-store'});if(!response.ok)throw new Error('Rates unavailable');let data=await response.json();if(data.result!=='success')throw new Error('Rates unavailable');currencyRates={PKR:data.rates.PKR,GBP:data.rates.GBP,EUR:data.rates.EUR};}catch(e){}refreshPlanPrices()}
+refreshPlanPrices();updateCurrencyRates();
+
+</script>
+</body></html>
